@@ -41,7 +41,7 @@ export default function NotificationScreen(props: Props) {
             {eventList.length === 0 ? null : (
               <View style={styles.listContainer}>
                 <View>
-                  {eventList.slice(0, 2).map((event) => (
+                  {eventList.map((event) => (
                     <CardSmall
                       event={event}
                       key={event.id}

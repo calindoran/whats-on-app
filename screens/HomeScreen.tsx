@@ -7,6 +7,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native'
 import { dummyCategoryList, dummyEventList } from '../api/DummyData'
@@ -32,6 +33,7 @@ const categoryData = dummyCategoryList
 export default function HomeScreen(props: Props) {
   // TODO: Populate eventList and categoryList with data from the API
   const [isLoading, setIsLoading] = useState(false)
+  const [notificationCount, setNotificationCount] = useState(2)
   const [eventList, setEventList] = useState(eventData)
   const [categoryList, setCategoryList] = useState(categoryData)
 
@@ -65,12 +67,18 @@ export default function HomeScreen(props: Props) {
           <View style={styles.topContainer}>
             <View style={styles.headerContainer}>
               <Text style={styles.headerText}>Whats On?</Text>
-              <Feather
-                name="bell"
-                size={24}
-                style={styles.icon}
-                onPress={goToNotifications}
-              />
+              <TouchableOpacity onPress={goToNotifications}>
+                <View style={styles.notificationIconContainer}>
+                  <Feather name="bell" size={24} style={styles.icon} />
+                  {notificationCount > 0 && (
+                    <View style={styles.notificationCountContainer}>
+                      <Text style={styles.notificationCountText}>
+                        {notificationCount}
+                      </Text>
+                    </View>
+                  )}
+                </View>
+              </TouchableOpacity>
             </View>
             <ImageBackground
               style={styles.cardContainer}
@@ -82,7 +90,10 @@ export default function HomeScreen(props: Props) {
               </View>
               <Text style={styles.detailText}>Let's see what's on!</Text>
               <View style={styles.searchContainer}>
-                <SearchBar placeholder={'Search'} onSearch={handleSearch} />
+                <SearchBar
+                  placeholder={'Search Events'}
+                  onSearch={handleSearch}
+                />
               </View>
             </ImageBackground>
           </View>
@@ -98,7 +109,7 @@ export default function HomeScreen(props: Props) {
               <View>
                 <Text style={styles.text}>Upcoming Events</Text>
                 <View style={styles.listContainer}>
-                  {eventList.slice(0, 2).map((event) => (
+                  {eventList.map((event) => (
                     <CardSmall
                       event={event}
                       key={event.id}
@@ -108,7 +119,7 @@ export default function HomeScreen(props: Props) {
                 </View>
               </View>
             )}
-            <Text style={styles.text}>All Events</Text>
+            <Text style={styles.text}>Events by Category</Text>
             <View style={styles.categoryContainer}>
               {categoryList?.map((category) => (
                 <Category
@@ -149,7 +160,7 @@ const styles = StyleSheet.create({
   },
   greetingWrapper: {
     marginTop: 8,
-    marginBottom: 64,
+    marginBottom: 28,
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -194,5 +205,24 @@ const styles = StyleSheet.create({
   },
   icon: {
     color: Theme.colorPalette.main.color_primary,
+  },
+  notificationIconContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  notificationCountContainer: {
+    position: 'absolute',
+    top: -8,
+    right: -8,
+    backgroundColor: 'red',
+    borderRadius: 10,
+    width: 20,
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  notificationCountText: {
+    color: 'white',
+    fontSize: 12,
   },
 })

@@ -74,7 +74,7 @@ export const CardCarousel = (props: Props) => {
 
 const styles = StyleSheet.create({
   card: {
-    flex: 1,
+    flexGrow: 1,
     flexDirection: 'row',
     width: CARD_WIDTH,
     height: CARD_HEIGHT,
@@ -86,7 +86,9 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
   imageContainer: {
-    flex: 1,
+    display: 'flex',
+    flexGrow: 1,
+    alignItems: 'flex-end',
     paddingVertical: 24,
   },
   imageCategory: {

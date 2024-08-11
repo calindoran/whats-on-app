@@ -1,21 +1,11 @@
 import { Feather } from '@expo/vector-icons'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { useFonts } from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen'
 import { useEffect } from 'react'
-import {
-  StyleSheet,
-  TouchableOpacity,
-  useColorScheme,
-  View,
-} from 'react-native'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import 'react-native-reanimated'
 import Theme from '../constants/Theme'
 import CalendarScreen from '../screens/CalendarScreen'
@@ -116,74 +106,70 @@ function MapStack() {
 }
 
 function Navigation() {
-  const colorScheme = useColorScheme()
-
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ color }) => {
-            const getIconName = () => {
-              switch (route.name) {
-                case 'Home':
-                  return 'home'
-                case 'Search':
-                  return 'search'
-                default:
-                  return 'info'
-              }
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ color }) => {
+          const getIconName = () => {
+            switch (route.name) {
+              case 'Home':
+                return 'home'
+              case 'Search':
+                return 'search'
+              default:
+                return 'info'
             }
-            const iconName = getIconName()
-            return <Feather name={iconName} size={30} color={color} />
+          }
+          const iconName = getIconName()
+          return <Feather name={iconName} size={30} color={color} />
+        },
+        tabBarStyle: {
+          ...styles.shadow,
+          position: 'absolute',
+          bottom: 8,
+          left: 8,
+          right: 8,
+          borderRadius: 20,
+          height: 50,
+          justifyContent: 'center',
+          alignItems: 'center',
+          paddingBottom: 0,
+        },
+        tabBarActiveTintColor: Theme.colorPalette.main.color_primary,
+        tabBarInactiveTintColor: Theme.colorPalette.main.color_gray,
+        headerShown: false,
+        tabBarShowLabel: false,
+      })}
+      initialRouteName="Home"
+    >
+      <Tab.Screen name="Home" component={HomeStack} />
+      <Tab.Screen
+        name="Map"
+        component={MapStack}
+        options={{
+          tabBarButton(props) {
+            return (
+              <TouchableOpacity
+                onPress={props.onPress}
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <View style={styles.tabBarButton}>
+                  <Feather
+                    name="map-pin"
+                    size={30}
+                    color={Theme.colorPalette.main.color_white}
+                  />
+                </View>
+              </TouchableOpacity>
+            )
           },
-          tabBarStyle: {
-            ...styles.shadow,
-            position: 'absolute',
-            bottom: 8,
-            left: 8,
-            right: 8,
-            borderRadius: 20,
-            height: 50,
-            justifyContent: 'center',
-            alignItems: 'center',
-            paddingBottom: 0,
-          },
-          tabBarActiveTintColor: Theme.colorPalette.main.color_primary,
-          tabBarInactiveTintColor: Theme.colorPalette.main.color_gray,
-          headerShown: false,
-          tabBarShowLabel: false,
-        })}
-        initialRouteName="Home"
-      >
-        <Tab.Screen name="Home" component={HomeStack} />
-        <Tab.Screen
-          name="Map"
-          component={MapStack}
-          options={{
-            tabBarButton(props) {
-              return (
-                <TouchableOpacity
-                  onPress={props.onPress}
-                  style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                >
-                  <View style={styles.tabBarButton}>
-                    <Feather
-                      name="map-pin"
-                      size={30}
-                      color={Theme.colorPalette.main.color_white}
-                    />
-                  </View>
-                </TouchableOpacity>
-              )
-            },
-          }}
-        />
-        <Tab.Screen name="Search" component={SearchStack} />
-      </Tab.Navigator>
-    </ThemeProvider>
+        }}
+      />
+      <Tab.Screen name="Search" component={SearchStack} />
+    </Tab.Navigator>
   )
 }
 
