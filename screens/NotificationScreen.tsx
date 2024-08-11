@@ -1,3 +1,4 @@
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useState } from 'react'
 import {
   ActivityIndicator,
@@ -8,20 +9,20 @@ import {
 } from 'react-native'
 import { dummyEventList } from '../api/DummyData'
 import CardSmall from '../components/CardSmall'
-import Colors from '../constants/Colors'
+import Theme from '../constants/Theme'
 
-export default function NotificationScreen({
-  navigation,
-}: {
-  navigation: any
-}) {
+type RootStackParamList = { CalendarScreen: undefined }
+type Props = NativeStackScreenProps<RootStackParamList>
+
+const eventData = dummyEventList
+
+export default function NotificationScreen(props: Props) {
   // TODO: Populate eventList with data from the API
   const [isLoading, setIsLoading] = useState(false)
-  const eventData = dummyEventList
   const [eventList, setEventList] = useState(eventData)
 
   function navToCalendar() {
-    navigation.navigate('CalendarScreen')
+    props.navigation.navigate('CalendarScreen')
   }
 
   return (
@@ -30,7 +31,7 @@ export default function NotificationScreen({
         <View style={styles.loadingContainer}>
           <ActivityIndicator
             size="large"
-            color={Colors.colorPalette.main.color_primary}
+            color={Theme.colorPalette.main.color_primary}
           />
         </View>
       ) : (

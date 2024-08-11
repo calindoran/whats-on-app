@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
-import Colors from '../constants/Colors'
+import Theme from '../constants/Theme'
 import { ExternalLink } from './ExternalLink'
 import { MonoText } from './StyledText'
 import { Text, View } from './Themed'
@@ -42,7 +42,7 @@ export default function EditScreenInfo({ path }: { path: string }) {
         >
           <Text
             style={styles.helpLinkText}
-            lightColor={Colors.colorPalette.light.tint}
+            lightColor={Theme.colorPalette.light.tint}
           >
             Tap here if your app doesn't automatically update after making
             changes

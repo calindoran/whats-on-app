@@ -12,13 +12,12 @@ import * as SplashScreen from 'expo-splash-screen'
 import { useEffect } from 'react'
 import {
   StyleSheet,
-  Text,
   TouchableOpacity,
   useColorScheme,
   View,
 } from 'react-native'
 import 'react-native-reanimated'
-import Colors from '../constants/Colors'
+import Theme from '../constants/Theme'
 import CalendarScreen from '../screens/CalendarScreen'
 import EventDetailScreen from '../screens/EventDetailScreen'
 import HomeScreen from '../screens/HomeScreen'
@@ -52,7 +51,7 @@ export default function RootLayout() {
     return null
   }
 
-  return <RootLayoutNav />
+  return <Navigation />
 }
 
 function SearchStack() {
@@ -116,7 +115,7 @@ function MapStack() {
   )
 }
 
-function RootLayoutNav() {
+function Navigation() {
   const colorScheme = useColorScheme()
 
   return (
@@ -149,8 +148,8 @@ function RootLayoutNav() {
             alignItems: 'center',
             paddingBottom: 0,
           },
-          tabBarActiveTintColor: Colors.colorPalette.main.color_primary,
-          tabBarInactiveTintColor: Colors.colorPalette.main.color_gray,
+          tabBarActiveTintColor: Theme.colorPalette.main.color_primary,
+          tabBarInactiveTintColor: Theme.colorPalette.main.color_gray,
           headerShown: false,
           tabBarShowLabel: false,
         })}
@@ -174,7 +173,7 @@ function RootLayoutNav() {
                     <Feather
                       name="map-pin"
                       size={30}
-                      color={Colors.colorPalette.main.color_white}
+                      color={Theme.colorPalette.main.color_white}
                     />
                   </View>
                 </TouchableOpacity>
@@ -193,8 +192,8 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 32,
-    backgroundColor: Colors.colorPalette.main.color_primary,
-    shadowColor: Colors.colorPalette.main.color_gray,
+    backgroundColor: Theme.colorPalette.main.color_primary,
+    shadowColor: Theme.colorPalette.main.color_gray,
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
@@ -202,7 +201,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   shadow: {
-    shadowColor: Colors.colorPalette.main.color_gray,
+    shadowColor: Theme.colorPalette.main.color_gray,
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.2,
     shadowRadius: 4,

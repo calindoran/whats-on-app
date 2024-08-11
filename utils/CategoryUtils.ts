@@ -1,9 +1,14 @@
-export const filterEventsByCategory = (category: string, eventList: any[]) => {
+import { EventType } from '../types/DataTypes'
+
+export const filterEventsByCategory = (
+  category: string,
+  eventList: EventType[],
+) => {
   if (category === '') {
     return eventList
   } else {
     const filteredList = eventList.filter(
-      (event) => event.music_genre.toLowerCase() === category.toLowerCase(),
+      (event) => event.genre.toLowerCase() === category.toLowerCase(),
     )
     return filteredList
   }

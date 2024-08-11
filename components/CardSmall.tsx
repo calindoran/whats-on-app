@@ -1,23 +1,27 @@
 import React from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import Colors from '../constants/Colors'
+import Theme from '../constants/Theme'
+import { EventType } from '../types/DataTypes'
 
-export default function CardSmall({ event, onPress }: any) {
-  const { eventName, eventType, scheduledDate, timeSlot } = event
+type Props = {
+  event: EventType
+  onPress?: () => void
+}
 
-  const formattedDate = new Date(scheduledDate)
-  const day = formattedDate.getDate()
-  const month = formattedDate.toLocaleString('default', { month: 'short' })
+export default function CardSmall(props: Props) {
+  const { name, type, date, slot } = props.event
+  const day = new Date(date).getDate()
+  const month = new Date(date).toLocaleString('default', { month: 'short' })
 
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={props.onPress}>
       <View style={styles.container}>
         <View style={styles.detailsContainer}>
           <Text style={styles.eventType}>
-            {eventType}, {eventName}
+            {type}, {name}
           </Text>
           <Text style={styles.time}>
-            {timeSlot}, {day} {month}
+            {slot}, {day} {month}
           </Text>
         </View>
       </View>
@@ -33,8 +37,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     marginVertical: 8,
     paddingVertical: 8,
-    backgroundColor: Colors.colorPalette.main.color_white,
-    shadowColor: Colors.colorPalette.main.color_gray,
+    backgroundColor: Theme.colorPalette.main.color_white,
+    shadowColor: Theme.colorPalette.main.color_gray,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
   },
@@ -49,6 +53,6 @@ const styles = StyleSheet.create({
   time: {
     fontSize: 14,
     padding: 4,
-    color: Colors.colorPalette.main.color_gray,
+    color: Theme.colorPalette.main.color_gray,
   },
 })

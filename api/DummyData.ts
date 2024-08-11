@@ -1,15 +1,17 @@
-export const dummyEventList = [
+import { CategoryType, EventType } from '../types/DataTypes'
+
+export const dummyEventList: EventType[] = [
   {
-    eventName: 'Event Name',
-    eventType: 'Event Type',
-    music_genre: 'Music Genre',
-    scheduledDate: new Date(),
-    timeSlot: 'Time Slot',
+    name: 'Event Name',
+    type: 'Event Type',
+    genre: 'Music Genre',
+    date: new Date(),
+    slot: 'Time Slot',
     id: 0,
   },
 ]
 
-export const dummyCategoryList = [
+export const dummyCategoryList: CategoryType[] = [
   {
     name: 'Event Type',
     icon: 'settings',

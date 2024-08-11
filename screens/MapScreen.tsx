@@ -1,4 +1,4 @@
-import { Feather } from '@expo/vector-icons'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import * as Location from 'expo-location'
 import React, { useEffect, useState } from 'react'
 import {
@@ -10,55 +10,55 @@ import {
 } from 'react-native'
 import MapView, { Callout, Circle, Marker } from 'react-native-maps'
 import { dummyEventList } from '../api/DummyData'
-import Colors from '../constants/Colors'
+import Theme from '../constants/Theme'
+import { EventType, LocationType } from '../types/DataTypes'
 
-export default function MapScreen({ navigation }: any) {
-  const [isLoading, setIsLoading] = useState(false)
+type RootStackParamList = { EventDetailScreen: { event: EventType } }
+type Props = NativeStackScreenProps<RootStackParamList>
 
+const eventData = dummyEventList
+
+export default function MapScreen(props: Props) {
   // TODO: Populate eventList and categoryList with data from the API
-  const eventData = dummyEventList
+  const [isLoading, setIsLoading] = useState(false)
   const [eventList, setEventList] = useState(eventData)
-
-  const [initialLocation, setInitialLocation] = useState<{
-    latitude: number
-    longitude: number
-    altitude: number | null
-    accuracy: number | null
-    altitudeAccuracy: number | null
-    heading: number | null
-    speed: number | null
-  } | null>(null)
+  const [initialLocation, setInitialLocation] = useState<LocationType>(null)
 
   useEffect(() => {
     async function getLocationAsync() {
-      let { status } = await Location.requestForegroundPermissionsAsync()
-      if (status !== 'granted') {
-        return
+      try {
+        setIsLoading(true)
+        let { status } = await Location.requestForegroundPermissionsAsync()
+        if (status !== 'granted') {
+          return
+        }
+        let location = await Location.getCurrentPositionAsync()
+        setInitialLocation({
+          ...location.coords,
+        })
+      } catch (error) {
+        console.error('Error getting location:', error)
+      } finally {
+        setIsLoading(false)
       }
-
-      let location = await Location.getCurrentPositionAsync()
-      setInitialLocation({
-        ...location.coords,
-      })
     }
-
     getLocationAsync()
   }, [])
 
-  const handleEventSelect = (item: {
-    eventName: string
-    eventType: string
-    music_genre: string
-    scheduledDate: Date
-    timeSlot: string
-    id: number
-  }) => {
-    navigation.navigate('EventDetailScreen', { item })
+  const handleEventSelect = (event: EventType) => {
+    props.navigation.navigate('EventDetailScreen', { event })
   }
 
   return (
     <View style={styles.container}>
-      {initialLocation && !isLoading ? (
+      {isLoading ?? !initialLocation ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator
+            size="large"
+            color={Theme.colorPalette.main.color_primary}
+          />
+        </View>
+      ) : (
         <MapView
           style={styles.map}
           provider="google"
@@ -67,7 +67,7 @@ export default function MapScreen({ navigation }: any) {
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}
-          loadingIndicatorColor={Colors.colorPalette.main.color_primary}
+          loadingIndicatorColor={Theme.colorPalette.main.color_primary}
           userLocationUpdateInterval={1000}
           showsUserLocation={true}
           showsMyLocationButton={true}
@@ -84,26 +84,20 @@ export default function MapScreen({ navigation }: any) {
           {eventList.map((event) => (
             <Marker
               key={event.id}
+              title={event.name}
               coordinate={{ ...initialLocation }}
-              title={event.eventName}
             >
               <Callout style={styles.calloutContainer}>
                 <TouchableOpacity onPress={() => handleEventSelect(event)}>
                   <View style={styles.calloutButton}>
-                    <Text style={styles.calloutTitle}>{event.eventName}</Text>
-                    <Text style={styles.calloutText}>{event.music_genre}</Text>
+                    <Text style={styles.calloutTitle}>{event.name}</Text>
+                    <Text style={styles.calloutText}>{event.genre}</Text>
                   </View>
                 </TouchableOpacity>
               </Callout>
             </Marker>
           ))}
         </MapView>
-      ) : (
-        <ActivityIndicator
-          style={styles.loadingContainer}
-          size="large"
-          color={Colors.colorPalette.main.color_primary}
-        />
       )}
     </View>
   )
@@ -121,15 +115,17 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
-    backgroundColor: Colors.colorPalette.main.color_white,
-    paddingLeft: 8,
+    backgroundColor: Theme.colorPalette.main.color_white,
+    borderRadius: 20,
+    padding: 12,
+    alignItems: 'center',
   },
   calloutTitle: {
     paddingBottom: 12,
     fontSize: 18,
   },
   calloutText: {
-    fontSize: 13,
+    fontSize: 14,
   },
   calloutButton: {
     justifyContent: 'center',
@@ -138,7 +134,7 @@ const styles = StyleSheet.create({
   },
   loadingContainer: {
     position: 'absolute',
-    top: Colors.dimensions.height / 2,
-    left: Colors.dimensions.width / 2,
+    top: Theme.dimensions.height / 2,
+    left: Theme.dimensions.width / 2,
   },
 })

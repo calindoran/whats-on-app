@@ -1,3 +1,4 @@
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useEffect, useState } from 'react'
 import {
   ActivityIndicator,
@@ -9,42 +10,33 @@ import {
 } from 'react-native'
 import { dummyEventList } from '../api/DummyData'
 import CardEvent from '../components/CardEvent'
-import Colors from '../constants/Colors'
-import {
-  configureNotifications,
-  handleNotification,
-} from '../utils/NotificationUtils'
+import Theme from '../constants/Theme'
+import { EventType } from '../types/DataTypes'
+import { configureNotifications } from '../utils/NotificationUtils'
 
-export default function CalendarScreen() {
-  const [isLoading, setIsLoading] = useState(true)
+type RootStackParamList = {
+  CalendarScreen: undefined
+}
 
+type Props = NativeStackScreenProps<RootStackParamList>
+
+const eventData = dummyEventList
+
+export default function CalendarScreen(props: Props) {
   // TODO: Populate eventList with data from the API
-  const eventData = dummyEventList
+  const [isLoading, setIsLoading] = useState(false)
   const [eventList, setEventList] = useState(eventData)
 
   useEffect(() => {
     configureNotifications()
   }, [])
 
-  function removeEvent(event: {
-    eventName?: string
-    eventType?: string
-    scheduledDate?: Date
-    timeSlot?: string
-    id: any
-    appType?: any
-  }) {
+  function removeEvent(event: EventType) {
     const updatedEventList = eventList.filter((item) => item.id !== event.id)
     setEventList(updatedEventList)
   }
 
-  const handleCancel = (event: {
-    eventName: string
-    eventType: string
-    scheduledDate: Date
-    timeSlot: string
-    id: number
-  }) => {
+  const handleCancel = (event: EventType) => {
     Alert.alert('Event cancellation', 'Cancel your event?', [
       {
         text: 'Cancel',
@@ -63,11 +55,12 @@ export default function CalendarScreen() {
     <ScrollView style={styles.container}>
       <Text style={styles.header}>Events</Text>
       {isLoading ? (
-        <ActivityIndicator
-          style={styles.loadingContainer}
-          color={Colors.colorPalette.main.color_primary}
-          size="large"
-        />
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator
+            color={Theme.colorPalette.main.color_primary}
+            size="large"
+          />
+        </View>
       ) : (
         <View style={styles.listContainer}>
           {eventList.length === 0 ? (
@@ -110,7 +103,7 @@ const styles = StyleSheet.create({
   },
   loadingContainer: {
     position: 'absolute',
-    top: Colors.dimensions.height / 2,
-    left: Colors.dimensions.width / 2,
+    top: Theme.dimensions.height / 2,
+    left: Theme.dimensions.width / 2,
   },
 })

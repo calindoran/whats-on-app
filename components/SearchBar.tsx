@@ -1,14 +1,19 @@
 import { Feather } from '@expo/vector-icons'
 import React, { useState } from 'react'
 import { StyleSheet, TextInput, TouchableOpacity } from 'react-native'
-import Colors from '../constants/Colors'
+import Theme from '../constants/Theme'
 
-export default function SearchBar({ onSearch, placeholder }: any) {
+type Props = {
+  placeholder: string
+  onSearch: (text: string) => void
+}
+
+export default function SearchBar(props: Props) {
   const [isSearchFocused, setSearchFocused] = useState(false)
 
   const handleSearchFocus = () => {
     setSearchFocused(true)
-    onSearch('')
+    props.onSearch('')
   }
 
   const handleSearchBlur = () => {
@@ -20,13 +25,13 @@ export default function SearchBar({ onSearch, placeholder }: any) {
       <Feather
         name="search"
         size={20}
-        color={Colors.colorPalette.main.color_light_gray}
+        color={Theme.colorPalette.main.color_light_gray}
         style={styles.icon}
       />
       <TextInput
         style={styles.textInput}
-        placeholder={placeholder}
-        onChangeText={onSearch}
+        placeholder={props.placeholder}
+        onChangeText={props.onSearch}
         onBlur={handleSearchBlur}
         onFocus={handleSearchFocus}
       />
@@ -36,11 +41,11 @@ export default function SearchBar({ onSearch, placeholder }: any) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.colorPalette.main.color_white,
+    backgroundColor: Theme.colorPalette.main.color_white,
     padding: 12,
     borderRadius: 20,
     flexDirection: 'row',
-    shadowColor: Colors.colorPalette.main.color_gray,
+    shadowColor: Theme.colorPalette.main.color_gray,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     elevation: 6,

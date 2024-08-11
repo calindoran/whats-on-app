@@ -4,7 +4,7 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native'
-import Colors from '../../constants/Colors'
+import Theme from '../../constants/Theme'
 
 export default function Button({ onPress, loading, text }: any) {
   return (
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     padding: 8,
     flex: 1,
     justifyContent: 'center',
-    shadowColor: Colors.colorPalette.main.color_gray,
+    shadowColor: Theme.colorPalette.main.color_gray,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     elevation: 6,

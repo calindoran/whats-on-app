@@ -1,4 +1,5 @@
 import { Feather } from '@expo/vector-icons'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useState } from 'react'
 import {
   ActivityIndicator,
@@ -8,44 +9,55 @@ import {
   Text,
   View,
 } from 'react-native'
+import { dummyCategoryList, dummyEventList } from '../api/DummyData'
 import { CardCarousel } from '../components/CardCarousel'
 import CardSmall from '../components/CardSmall'
 import Category from '../components/Category'
 import SearchBar from '../components/SearchBar'
-import Colors from '../constants/Colors'
-import { dummyCategoryList, dummyEventList } from '../api/DummyData'
+import Theme from '../constants/Theme'
+import { CategoryType } from '../types/DataTypes'
 
-export default function HomeScreen({ navigation }: { navigation: any }) {
+type RootStackParamList = {
+  HomeScreen: undefined
+  CalendarScreen: undefined
+  NotificationScreen: undefined
+  SearchScreen?: { category?: CategoryType }
+}
+
+type Props = NativeStackScreenProps<RootStackParamList>
+
+const eventData = dummyEventList
+const categoryData = dummyCategoryList
+
+export default function HomeScreen(props: Props) {
   // TODO: Populate eventList and categoryList with data from the API
   const [isLoading, setIsLoading] = useState(false)
-  const eventData = dummyEventList
   const [eventList, setEventList] = useState(eventData)
-  const categoryData = dummyCategoryList
   const [categoryList, setCategoryList] = useState(categoryData)
 
   function goToCalendar() {
-    navigation.navigate('CalendarScreen')
+    props.navigation.navigate('CalendarScreen')
   }
 
   function goToNotifications() {
-    navigation.navigate('NotificationScreen')
+    props.navigation.navigate('NotificationScreen')
   }
 
   const handleSearch = () => {
-    navigation.navigate('SearchScreen')
+    props.navigation.navigate('SearchScreen')
   }
 
-  const handleCategorySelect = (selectedCategory: any) => {
-    navigation.navigate('SearchScreen', { category: selectedCategory })
+  const handleCategorySelect = (category: CategoryType) => {
+    props.navigation.navigate('SearchScreen', { category })
   }
 
   return (
     <ScrollView>
       {isLoading ? (
-        <View style={styles.loading_container}>
+        <View style={styles.loadingContainer}>
           <ActivityIndicator
             size="large"
-            color={Colors.colorPalette.main.color_primary}
+            color={Theme.colorPalette.main.color_primary}
           />
         </View>
       ) : (
@@ -82,7 +94,6 @@ export default function HomeScreen({ navigation }: { navigation: any }) {
                 onSelect={handleCategorySelect}
               />
             </View>
-
             {eventList.length === 0 ? null : (
               <View>
                 <Text style={styles.text}>Upcoming Events</Text>
@@ -119,6 +130,10 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 48,
     marginBottom: 120,
+  },
+  loadingContainer: {
+    alignContent: 'center',
+    justifyContent: 'center',
   },
   topContainer: {
     paddingHorizontal: 24,
@@ -157,13 +172,13 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 34,
-    color: Colors.colorPalette.main.color_primary,
+    color: Theme.colorPalette.main.color_primary,
     flex: 1,
   },
   greetingText: {
     paddingHorizontal: 8,
     fontSize: 24,
-    color: Colors.colorPalette.main.color_white,
+    color: Theme.colorPalette.main.color_white,
   },
   text: {
     flex: 1,
@@ -175,13 +190,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingVertical: 16,
     paddingHorizontal: 8,
-    color: Colors.colorPalette.main.color_white,
+    color: Theme.colorPalette.main.color_white,
   },
   icon: {
-    color: Colors.colorPalette.main.color_primary,
-  },
-  loading_container: {
-    alignContent: 'center',
-    justifyContent: 'center',
+    color: Theme.colorPalette.main.color_primary,
   },
 })

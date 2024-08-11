@@ -1,4 +1,5 @@
 import { Entypo } from '@expo/vector-icons'
+import { format } from 'date-fns'
 import React from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import {
@@ -7,14 +8,20 @@ import {
   MenuOptions,
   MenuTrigger,
 } from 'react-native-popup-menu'
-import Colors from '../constants/Colors'
+import Theme from '../constants/Theme'
+import { EventType } from '../types/DataTypes'
 
-export default function CardEvent({ event, onPressCancel, onPress }: any) {
-  const { eventName, eventType, scheduledDate } = event
+type Props = {
+  event: EventType
+  onPress?: () => void
+  onPressCancel?: () => void
+}
 
-  const formattedDate = new Date(scheduledDate)
-  const day = formattedDate.getDate()
-  const month = formattedDate.toLocaleString('default', { month: 'short' })
+export default function CardEvent(props: Props) {
+  const { name, type, date } = props.event
+  const formattedDate = format(new Date(date), 'yyyy-MM-dd HH:mm')
+  const day = new Date(date).getDate()
+  const month = new Date(date).toLocaleString('default', { month: 'short' })
 
   return (
     <View>
@@ -29,9 +36,9 @@ export default function CardEvent({ event, onPressCancel, onPress }: any) {
         </View>
         <View style={styles.detailsContainer}>
           <Text style={styles.eventType}>
-            {eventType}, {eventName}
+            {type}, {name}
           </Text>
-          <Text style={styles.time}>{scheduledDate}</Text>
+          <Text style={styles.time}>{formattedDate}</Text>
         </View>
         <TouchableOpacity style={styles.iconContainer}>
           <Menu>
@@ -39,12 +46,16 @@ export default function CardEvent({ event, onPressCancel, onPress }: any) {
               <Entypo
                 name="dots-three-vertical"
                 size={20}
-                color={Colors.colorPalette.main.color_light_gray}
-                onPress={onPress}
+                color={Theme.colorPalette.main.color_light_gray}
+                onPress={props.onPress}
               />
             </MenuTrigger>
             <MenuOptions>
-              <MenuOption onSelect={onPressCancel} text="Cancel" />
+              <MenuOption
+                style={styles.menu}
+                onSelect={props.onPressCancel}
+                text="Cancel"
+              />
             </MenuOptions>
           </Menu>
         </TouchableOpacity>
@@ -61,21 +72,21 @@ const styles = StyleSheet.create({
     marginHorizontal: 24,
     marginBottom: 16,
     paddingVertical: 8,
-    backgroundColor: Colors.colorPalette.main.color_white,
-    shadowColor: Colors.colorPalette.main.color_gray,
+    backgroundColor: Theme.colorPalette.main.color_white,
+    shadowColor: Theme.colorPalette.main.color_gray,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     elevation: 6,
   },
   dateContainer: {
-    backgroundColor: Colors.colorPalette.main.color_primary,
+    backgroundColor: Theme.colorPalette.main.color_primary,
     marginHorizontal: 8,
     borderRadius: 20,
     paddingHorizontal: 16,
     paddingVertical: 8,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: Colors.colorPalette.main.color_gray,
+    shadowColor: Theme.colorPalette.main.color_gray,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
@@ -91,11 +102,11 @@ const styles = StyleSheet.create({
   },
   dateTextDisplay: {
     fontSize: 34,
-    color: Colors.colorPalette.main.color_white,
+    color: Theme.colorPalette.main.color_white,
   },
   monthText: {
     fontSize: 18,
-    color: Colors.colorPalette.main.color_white,
+    color: Theme.colorPalette.main.color_white,
   },
   eventType: {
     fontSize: 18,
@@ -104,6 +115,12 @@ const styles = StyleSheet.create({
   time: {
     fontSize: 14,
     padding: 8,
-    color: Colors.colorPalette.main.color_gray,
+    color: Theme.colorPalette.main.color_gray,
+  },
+  menu: {
+    backgroundColor: Theme.colorPalette.main.color_white,
+    borderRadius: 20,
+    padding: 12,
+    alignItems: 'center',
   },
 })

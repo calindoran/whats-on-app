@@ -8,18 +8,17 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import Colors from '../constants/Colors'
+import Theme from '../constants/Theme'
 
-const CARD_WIDTH = Colors.dimensions.width - 100
+const CARD_WIDTH = Theme.dimensions.width - 100
 const CARD_HEIGHT = 180
 
-export const CardCarousel = ({
-  list,
-  onSelect,
-}: {
+type Props = {
   list: any[]
   onSelect: (item: any) => void
-}) => {
+}
+
+export const CardCarousel = (props: Props) => {
   const animatedValue = new Animated.Value(0)
 
   animatedValue.addListener(() => {
@@ -28,7 +27,7 @@ export const CardCarousel = ({
 
   return (
     <FlatList
-      data={list}
+      data={props.list}
       horizontal
       snapToInterval={CARD_WIDTH + 24}
       decelerationRate={'fast'}
@@ -40,16 +39,16 @@ export const CardCarousel = ({
           <TouchableOpacity
             style={{
               marginLeft: index === 0 ? 0 : 24,
-              marginRight: index === list.length - 1 ? 24 : 0,
+              marginRight: index === props.list.length - 1 ? 24 : 0,
               marginVertical: 16,
             }}
-            onPress={() => onSelect(item)}
+            onPress={() => props.onSelect(item)}
           >
             <View style={styles.card}>
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
                   style={styles.button}
-                  onPress={() => onSelect(item)}
+                  onPress={() => props.onSelect(item)}
                 >
                   <Text style={styles.buttonText}>View</Text>
                 </TouchableOpacity>
@@ -80,8 +79,8 @@ const styles = StyleSheet.create({
     width: CARD_WIDTH,
     height: CARD_HEIGHT,
     borderRadius: 20,
-    backgroundColor: Colors.colorPalette.main.color_white,
-    shadowColor: Colors.colorPalette.main.color_gray,
+    backgroundColor: Theme.colorPalette.main.color_white,
+    shadowColor: Theme.colorPalette.main.color_gray,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     alignSelf: 'flex-end',
@@ -101,7 +100,7 @@ const styles = StyleSheet.create({
   },
   category: {
     fontSize: 20,
-    color: Colors.colorPalette.main.color_primary,
+    color: Theme.colorPalette.main.color_primary,
   },
   detailContainer: {
     flexDirection: 'row',
@@ -109,7 +108,7 @@ const styles = StyleSheet.create({
   },
   detail: {
     fontSize: 14,
-    color: Colors.colorPalette.main.color_primary,
+    color: Theme.colorPalette.main.color_primary,
   },
   buttonContainer: {
     position: 'absolute',
@@ -119,7 +118,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   button: {
-    backgroundColor: Colors.colorPalette.main.color_primary,
+    backgroundColor: Theme.colorPalette.main.color_primary,
     borderRadius: 20,
     paddingVertical: 8,
     paddingHorizontal: 16,
@@ -128,6 +127,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 16,
-    color: Colors.colorPalette.main.color_white,
+    color: Theme.colorPalette.main.color_white,
   },
 })
